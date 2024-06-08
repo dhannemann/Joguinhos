@@ -89,6 +89,55 @@
                 padding: 15px; /* Ajuste o valor do padding para telas menores */
             }
         }
+
+        /* Estilos para a seção de exercícios matemáticos */
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            margin: 50px auto;
+            text-align: left;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .container label {
+            font-size: 18px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .container input,
+        .container select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .container button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
@@ -114,11 +163,150 @@
 
     <div id="author-message">
         <p>Seja muito bem-vindo aos jogos interativos!<br>
-        Aqui você pode aprender a ler, escrever,<br>
-        contar e fazer contas de forma divertida!<br>
-        Brinque um pouco todo dia para aperfeiçoar suas habilidades.<br>
-        Daniel Hannemann</p>
+            Aqui você pode aprender a ler, escrever,<br>
+            contar e fazer contas de forma divertida!<br>
+            Brinque um pouco todo dia para aperfeiçoar suas habilidades.<br>
+            Daniel Hannemann</p>
     </div>
+
+    <!-- Seção de Exercícios Matemáticos -->
+    <div class="container">
+        <h1>Exercícios Matemáticos Divertidos</h1>
+        <form id="difficultyForm">
+            <label for="studentName">Nome do Aluno:</label>
+            <input type="text" id="studentName" name="studentName" required>
+            <label for="difficulty">Nível de Dificuldade:</label>
+            <select id="difficulty" name="difficulty">
+                <option value="easy">Fácil</option>
+                <option value="medium">Médio</option>
+                <option value="hard">Difícil</option>
+            </select>
+            <label for="numPages">Número de Páginas:</label>
+            <select id="numPages" name="numPages">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
+            <button type="button" onclick="generatePDF('download')">Baixar PDF</button>
+            <button type="button" onclick="generatePDF('preview')">Visualizar PDF</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        function generateRandomEquation(difficulty) {
+            const operations = ['+', '-', '*', '/'];
+            let num1, num2, operation;
+
+            switch (difficulty) {
+                case 'easy':
+                    do {
+                        num1 = Math.floor(Math.random() * 10) + 1;
+                        num2 = Math.floor(Math.random() * 10) + 1;
+                        operation = operations[Math.floor(Math.random() * 2)];
+                        if (operation === '-') {
+                            if (num1 - num2 < 0) {
+                                [num1, num2] = [num2, num1];
+                            }
+                        }
+                    } while (operation === '-' && num1 - num2 < 0);
+                    break;
+                case 'medium':
+                    num1 = parseFloat((Math.random() * 9 + 0.1).toFixed(1));
+                    num2 = parseFloat((Math.random() * 9 + 0.1).toFixed(1));
+                    operation = '*';
+                    break;
+                case 'hard':
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    operation = operations[Math.floor(Math.random() * 4)];
+                    if (operation === '/') {
+                        num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
+                        num1 = num2 * (Math.floor(Math.random() * 9) + 2);
+                    }
+                    break;
+            }
+
+            if (operation === '/') {
+                do {
+                    num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
+                } while (num1 % num2 !== 0);
+            } else if (difficulty === 'hard' && operation === '*') {
+                const isNum1Decimal = Math.random() < 0.5;
+                if (isNum1Decimal) {
+                    num1 = parseFloat((Math.random() * 9 + 0.1).toFixed(1));
+                } else {
+                    num2 = parseFloat((Math.random() * 9 + 0.1).toFixed(1));
+                }
+            }
+
+            return `${num1} ${operation} ${num2} =`;
+        }
+
+        function generatePDF(action) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const difficulty = document.getElementById('difficulty').value;
+            const studentName = document.getElementById('studentName').value;
+            const numPages = parseInt(document.getElementById('numPages').value);
+            const totalPages = Math.min(numPages, 7);
+
+            const backgroundBase64 = 'data:image/jpeg;base64,...';
+
+            for (let page = 0; page < totalPages; page++) {
+                if (page > 0) {
+                    doc.addPage();
+                }
+
+                doc.addImage(backgroundBase64, 'JPEG', 0, 0, 210, 297);
+
+                function isTooClose(newX, newY, positions, threshold = 30) {
+                    return positions.some(([x, y]) => Math.abs(newX - x) < threshold && Math.abs(newY - y) < threshold);
+                }
+
+                const positions = [];
+                const maxTries = 100;
+
+                for (let i = 0; i < 40; i++) {
+                    let equation = generateRandomEquation(difficulty);
+                    let x, y, tries = 0;
+
+                    do {
+                        x = Math.floor(Math.random() * 130) + 40;
+                        y = Math.floor(Math.random() * 230) + 40;
+                        tries++;
+                    } while (isTooClose(x, y, positions) && tries < maxTries);
+
+                    if (tries < maxTries) {
+                        positions.push([x, y]);
+                        doc.text(equation, x, y);
+                    }
+                }
+
+                const currentDate = new Date().toLocaleDateString('pt-BR');
+                const difficultyText = difficulty === 'easy' ? 'Muito Fácil' : (difficulty === 'medium' ? 'Um Pouco Desafiador' : 'Bem Desafiador');
+                const title = `Exercícios Matemáticos Divertidos - ${currentDate} - Nível: ${difficultyText}`;
+                const completeText = `${title}\n\nAluno: ${studentName}`;
+
+                doc.text(completeText, 105, 10, { align: 'center' });
+            }
+
+            if (action === 'download') {
+                doc.save('exercicios_matematicos.pdf');
+            } else if (action === 'preview') {
+                const pdfDataUri = doc.output('datauristring');
+                const iframe = "<iframe width='100%' height='100%' src='" + pdfDataUri + "'></iframe>";
+                const x = window.open();
+                x.document.open();
+                x.document.write(iframe);
+                x.document.close();
+            }
+        }
+    </script>
 </body>
 
 </html>
