@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo das Palavras</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #b3e0ff;
+        }
+        #game-container {
+            max-width: 400px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #word-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #result-message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        #input-container {
+            margin-top: 20px;
+        }
+        #next-button {
+            display: none;
+            margin-top: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #next-button:hover {
+            background-color: #45a049;
+        }
+        #word-counter {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        #congratulations-message {
+            display: none;
+            color: green;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #restart-button {
+            display: none;
+            margin-top: 20px;
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #restart-button:hover {
+            background-color: #007B9F;
+        }
+        #back-to-menu {
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #back-to-menu:hover {
+            background-color: #1E87F0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <script>
+            var palavras = [
+                "Ícaro", "Tata", "Daniel", "Cachorro", "Girafa", "Elefante", "Computador", "Caneta", "Algodão doce",
+                "Abacaxi", "Montanha", "Teclado", "Ventilador", "Sapato", "Abelha", "Maçã", "Avião", "Papai Noel",
+                "Bicicleta", "Chocolate", "Foguete", "Janela", "Limão", "Uva", "Piano", "Pipoca", "Controle remoto",
+                "Dinossauro", "Telefone", "Relógio", "Abajur", "Banana", "Garfo", "Piccolo Neto", "Goku",
+                "Sol", "Lua", "Estrela", "Mar", "Barco", "Praia", "Cadeira", "Mesa", "Porta", "Jardim",
+                "Arco-íris", "Nuvem", "Vento", "Neve", "Inverno", "Verão", "Outono", "Primavera", "Estou aprendendo",
+                "Cachecol", "Casaco", "Copo", "Lápis", "Borracha", "Livro", "Escova", "Pente", "Cama",
+                "Travesseiro", "Sonho", "Piano", "Violino", "Guitarra", "Cachecol", "Cesta", "Bola",
+                "Coelho", "Gato", "Ovelha", "Rato", "Borboleta", "Elefante", "Leão", "Tigre", "Girafa",
+                "Baleia", "Tubarão", "Polvo", "Cavalo", "Pato", "Galinha", "Árvore", "Flor", "Abelha",
+                "Formiga", "Beija-flor", "Beijo", "Amor", "Família", "Amigo", "Escola", "Casa", "Rua",
+                "Praça", "Rio", "Lago", "Montanha", "Céu", "Estrela", "Lua", "Sol", "Planeta"
+            ];
+            var palavrasRestantes = palavras.slice(); // Copia as palavras para garantir que não se repitam
+            var indicePalavra = -1; // Inicializado como -1 para indicar que ainda não começou
+            var palavraAtual;
+            var palavrasFeitas = 0;
+            
+            // Adicionando um elemento de áudio para tocar quando acertar
+            var audioElement = new Audio('https://www.dropbox.com/scl/fi/3rmibdiczxj33c2b0h2ep/Correto.mp3?dl=1');
+
+
+            function exibirPalavraAtual() {
+                document.getElementById('word-display').innerText = palavraAtual;
+            }
+
+            function playCorrectSound() {
+                // Toca o som de acerto
+                audioElement.play();
+            }
+
+            function atualizarContador() {
+              if (palavrasFeitas === 1) {
+                document.getElementById('word-counter').innerText = 'Você acertou 1 palavra!';
+              } else {
+                document.getElementById('word-counter').innerText = 'Você acertou ' + palavrasFeitas + ' palavras!';
+              }
+            }
+
+            function iniciarJogo() {
+                // Sorteia uma nova palavra aleatória
+                indicePalavra = Math.floor(Math.random() * palavrasRestantes.length);
+                palavraAtual = palavrasRestantes[indicePalavra];
+                exibirPalavraAtual();
+
+                // Oculta a mensagem de boas-vindas e o botão
+                document.getElementById('welcome-message').style.display = 'none';
+
+                // Exibe a área de input apenas quando o jogo começa
+                document.getElementById('input-container').style.display = 'block';
+
+                // Adiciona eventos de escuta para a tecla "Enter" no campo de entrada
+                document.getElementById('tentativa').addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        if (document.getElementById('next-button').style.display === 'block') {
+                            proximaPalavra();
+                        } else {
+                            verificarPalavra();
+                        }
+                    }
+                });
+            }
+
+            function verificarPalavra() {
+                var tentativa = document.getElementById('tentativa').value;
+                var acertou = (tentativa.toUpperCase() === palavraAtual.toUpperCase());
+
+                if (acertou) {
+                    document.getElementById('result-message').innerText = 'Acertou! Parabéns!';
+                    document.getElementById('next-button').style.display = 'block';
+                    palavrasFeitas++;
+                    atualizarContador();
+                    playCorrectSound(); // Toca o som quando acertar
+                } else {
+                    document.getElementById('result-message').innerText = 'Tente novamente.';
+                }
+            }
+
+            function proximaPalavra() {
+                // Remove a palavra atual da lista de palavras restantes
+                palavrasRestantes.splice(indicePalavra, 1);
+
+                // Verifica se ainda há palavras para serem feitas
+                if (palavrasRestantes.length === 0) {
+                    document.getElementById('word-display').style.display = 'none';
+                    document.getElementById('input-container').style.display = 'none';
+                    document.getElementById('next-button').style.display = 'none';
+                    document.getElementById('congratulations-message').innerText = 'Você terminou o jogo! Parabéns!';
+                    document.getElementById('congratulations-message').style.display = 'block';
+                    document.getElementById('restart-button').style.display = 'block';
+                    document.getElementById('back-to-menu').style.display = 'block';
+                    atualizarContador();
+                    return;
+                }
+
+                // Sorteia uma nova palavra aleatória para a próxima rodada
+                indicePalavra = Math.floor(Math.random() * palavrasRestantes.length);
+                palavraAtual = palavrasRestantes[indicePalavra];
+                exibirPalavraAtual();
+                document.getElementById('tentativa').value = '';
+                document.getElementById('result-message').innerText = '';
+                document.getElementById('next-button').style.display = 'none';
+                atualizarContador();
+            }
+
+            function recomecarJogo() {
+                // Reinicia as variáveis
+                palavrasRestantes = palavras.slice();
+                palavrasFeitas = 0;
+                document.getElementById('congratulations-message').style.display = 'none';
+                document.getElementById('word-display').style.display = 'block';
+                document.getElementById('input-container').style.display = 'block';
+                document.getElementById('restart-button').style.display = 'none';
+                document.getElementById('back-to-menu').style.display = 'none';
+                proximaPalavra();
+            }
+        </script>
+        <center>
+        <h2 id="word-display"></h2>
+
+        <div id="input-container" style="display: none;">
+            <label for="tentativa">Digite a palavra:</label>
+            <input type="text" id="tentativa" required>
+            <br>
+            <button onclick="verificarPalavra()">Verificar</button>
+        </div>
+
+        <div id="result-message"></div>
+
+        <button id="next-button" style="display: none;" onclick="proximaPalavra()">Próxima Palavra</button>
+
+        <div id="word-counter"></div>
+
+        <div id="congratulations-message"></div>
+
+        <!-- Mensagem de boas-vindas e botão de início -->
+        <div id="welcome-message">
+            <p>Bem-vindo ao jogo das palavras!</p>
+            <button id="start-button" onclick="iniciarJogo()">Começar</button>
+        </div>
+
+        <button id="restart-button" style="display: none;" onclick="recomecarJogo()">Recomeçar</button>
+        </center>
+    </div>
+<br />
+<br />
+  Seja bem-vindo ao jogo das palavras!<br>
+  Neste jogo, você deve digitar a palavra que foi sorteada.<br>
+  Se escrever exatamente como está escrita, passará para a próxima palavra.<br>
+  Coloque ascentuação para que a palavra fique idêntica.<br>
+  Aperte a tecla Enter duas vezes para digitar a próxima palavra rapidamente.<br>
+  Tente digitar 20 palavras por dia para melhorar o aprendizado.
+<br />
+<br />
+<br />
+    <a id="back-to-menu" href="https://piccoloneto.neocities.org/Joguinhos">Voltar ao Menu Principal</a>
+</body>
+</html>
