@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Jogo Matemático</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #b3e0ff;
+        }
+
+        #container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #4caf50; /* Altere para verde (#4caf50) */
+            color: white;
+            border: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #equationLabel {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #about-info {
+            display: none;
+            text-align: left;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* Adicione um estilo para o botão "Voltar ao Menu Principal" */
+        #back-to-menu {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        #back-to-menu:hover {
+            background-color: #1E87F0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 id="equationLabel"></h1>
+        <button id="generateButton" onclick="showEquation()">Nova Equação</button>
+    </div>
+    <br />
+    <p>Seja bem-vindo ao jogo das contas!<br>
+    Jogue com o auxílio de um responsável.<br>
+    Para ver a próxima conta,<br>
+    pressione qualquer botão do teclado.<br>
+    Faça 15 contas por dia para aperfeiçoar suas habilidades!<br>
+    Divirta-se! =)</p>
+    <br />
+
+    <a id="back-to-menu" href="https://piccoloneto.neocities.org/Joguinhos">Voltar ao Menu Principal</a>
+
+    <script>
+        function generateRandomOperation() {
+            const operations = ['+', '-'];
+            return operations[Math.floor(Math.random() * operations.length)];
+        }
+
+        function generateRandomNumber(max) {
+            return Math.floor(Math.random() * (max + 1));
+        }
+
+        function generateEquation() {
+            const operation = generateRandomOperation();
+            let num1, num2;
+
+            if (operation === '+') {
+                num1 = generateRandomNumber(15);
+                num2 = generateRandomNumber(15 - num1);
+            } else if (operation === '-') {
+                num1 = generateRandomNumber(15);
+                num2 = generateRandomNumber(num1);
+            }
+
+            return `${num1} ${operation} ${num2}`;
+        }
+
+        function showEquation() {
+            const equationLabel = document.getElementById('equationLabel');
+            const equation = generateEquation();
+            equationLabel.textContent = equation;
+        }
+
+        // Adiciona um evento de tecla pressionada para mostrar a próxima equação
+        document.addEventListener('keydown', showEquation);
+
+        // Mostrar a primeira equação ao carregar a página
+        showEquation();
+    </script>
+</body>
+</html>

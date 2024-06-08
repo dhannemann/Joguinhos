@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #b3e0ff;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        #result {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        #nextButton {
+            display: none;
+            margin-top: 20px;
+            font-size: 1em;
+            padding: 8px 16px;
+        }
+
+        #phraseLabel {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        #resultLabel {
+            font-size: 18px;
+            margin-top: 10px;
+            color: red;
+        }
+
+        #successMessage {
+            font-size: 18px;
+            margin-top: 10px;
+            color: green;
+        }
+
+        #back-to-menu {
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #back-to-menu:hover {
+            background-color: #1E87F0;
+        }
+    </style>
+    <title>Verdade ou Mentira</title>
+</head>
+<body>
+    <div class="container">
+        <div id="question"></div>
+        <button onclick="checkAnswer(true)">Verdade</button>
+        <button onclick="checkAnswer(false)">Mentira</button>
+        <div id="result"></div>
+        <center><button id="nextButton" onclick="getNextQuestion()">Próxima Frase</button></center>
+    </div>
+
+    <div id="phraseLabel">
+        <p>Seja bem-vindo ao jogo das frases!<br>
+        Adivinhe se a frase diz a verdade ou mentira.<br>
+        Espero que goste do jogo! =)</p>
+    </div>
+
+    <a id="back-to-menu" href="https://piccoloneto.neocities.org/Joguinhos">Voltar ao Menu Principal</a>
+
+    <!-- Adicionando o áudio -->
+    <audio id="correctAudio" src="https://www.dropbox.com/scl/fi/3rmibdiczxj33c2b0h2ep/Correto.mp3?rlkey=7f0daehx6jsejgp8y730bjoof&dl=1"></audio>
+
+    <script>
+        const phrases = [
+{ text: 'A borboleta voa no jardim.', isTrue: true },
+{ text: 'O cachorro late para o carteiro.', isTrue: true },
+{ text: 'Os pássaros cantam de manhã cedo.', isTrue: true },
+{ text: 'A lua aparece no céu à noite.', isTrue: true },
+{ text: 'O sol aquece a terra.', isTrue: true },
+{ text: 'As estrelas brilham no escuro.', isTrue: true },
+{ text: 'A chuva molha as plantas.', isTrue: true },
+{ text: 'O arco-íris surge após a chuva.', isTrue: true },
+{ text: 'A tartaruga anda devagar.', isTrue: true },
+{ text: 'Os peixes nadam no aquário.', isTrue: true },
+{ text: 'O vento balança os balões.', isTrue: true },
+{ text: 'O inverno traz neve branca.', isTrue: true },
+{ text: 'A primavera floresce em cores.', isTrue: true },
+{ text: 'As formigas trabalham em equipe.', isTrue: true },
+{ text: 'O bolo assa no forno.', isTrue: true },
+{ text: 'Os golfinhos saltam na água.', isTrue: true },
+{ text: 'A girafa estica seu pescoço.', isTrue: true },
+{ text: 'A borboleta pousa na flor.', isTrue: true },
+{ text: 'Os elefantes têm grandes orelhas.', isTrue: true },
+{ text: 'As nuvens formam figuras no céu.', isTrue: true },
+{ text: 'Os esquilos são ágeis.', isTrue: true },
+{ text: 'O carro corre na estrada.', isTrue: true },
+{ text: 'O leão ruge na selva.', isTrue: true },
+{ text: 'A maçã é crocante.', isTrue: true },
+{ text: 'O avião voa alto no céu.', isTrue: true },
+{ text: 'Os gatos gostam de brincar com novelos.', isTrue: true },
+{ text: 'O beija-flor suga o néctar.', isTrue: true },
+{ text: 'Eu aprendo a ler palavras.', isTrue: true },
+{ text: 'O cisne nada no lago.', isTrue: true },
+{ text: 'As abelhas zumbem na colmeia.', isTrue: true },
+{ text: 'O piano produz sons melodiosos.', isTrue: true },
+{ text: 'Os coelhos têm orelhas compridas.', isTrue: true },
+{ text: 'A pipa sobe no céu azul.', isTrue: true },
+{ text: 'O navio navega pelo oceano.', isTrue: true },
+{ text: 'As árvores crescem altas.', isTrue: true },
+{ text: 'O macaco faz caretas engraçadas.', isTrue: true },
+{ text: 'O leopardo tem manchas.', isTrue: true },
+{ text: 'Os ursos hibernam no inverno.', isTrue: true },
+{ text: 'A vela ilumina o quarto.', isTrue: true },
+{ text: 'O tigre tem listras.', isTrue: true },
+{ text: 'O sol é amarelo.', isTrue: true },
+{ text: 'Os pássaros voam alto.', isTrue: true },
+{ text: 'A lua brilha à noite.', isTrue: true },
+{ text: 'As flores são coloridas.', isTrue: true },
+{ text: 'A borboleta é bonita.', isTrue: true },
+{ text: 'A água é refrescante.', isTrue: true },
+{ text: 'O arco-íris tem muitas cores.', isTrue: true },
+{ text: 'A chuva molha a grama.', isTrue: true },
+{ text: 'O inverno é frio.', isTrue: true },
+{ text: 'A primavera tem flores.', isTrue: true },
+{ text: 'A lesma é lenta.', isTrue: true },
+{ text: 'O bolo é delicioso.', isTrue: true },
+{ text: 'Os peixes nadam no mar.', isTrue: true },
+{ text: 'O vento balança as árvores.', isTrue: true },
+{ text: 'A girafa tem um pescoço longo.', isTrue: true },
+{ text: 'A formiga é pequena.', isTrue: true },
+{ text: 'O elefante é grande.', isTrue: true },
+{ text: 'As nuvens são fofas.', isTrue: true },
+{ text: 'A abelha voa zumbindo.', isTrue: true },
+{ text: 'O carro é rápido.', isTrue: true },
+{ text: 'A joaninha tem pintinhas.', isTrue: true },
+{ text: 'O relógio marca as horas.', isTrue: true },
+{ text: 'A maçã é vermelha.', isTrue: true },
+{ text: 'O avião voa alto no céu.', isTrue: true },
+{ text: 'O Canal Piccolo Neto é muito legal.', isTrue: true },
+{ text: 'O gato mia suavemente.', isTrue: true },
+{ text: 'A borboleta pousa na flor.', isTrue: true },
+{ text: 'Eu aprendo coisas novas.', isTrue: true },
+{ text: 'A cama é macia.', isTrue: true },
+{ text: 'O coelho é fofo.', isTrue: true },
+{ text: 'O sorriso é contagiante.', isTrue: true },
+{ text: 'A pipa voa no vento.', isTrue: true },
+{ text: 'O navio navega no mar.', isTrue: true },
+{ text: 'A árvore cresce no jardim.', isTrue: true },
+{ text: 'O macaco é brincalhão.', isTrue: true },
+
+{ text: 'O elefante voa pelo céu.', isTrue: false },
+{ text: 'As girafas são animais marinhos.', isTrue: false },
+{ text: 'O sol é feito de queijo.', isTrue: false },
+{ text: 'As nuvens são algodão doce.', isTrue: false },
+{ text: 'Os pinguins gostam de nadar no deserto.', isTrue: false },
+{ text: 'As estrelas são diamantes no céu.', isTrue: false },
+{ text: 'Os coelhos sabem tocar piano.', isTrue: false },
+{ text: 'Os unicórnios são os melhores surfistas.', isTrue: false },
+{ text: 'Os esquilos praticam paraolimpíadas.', isTrue: false },
+{ text: 'O sol é uma lâmpada gigante.', isTrue: false },
+{ text: 'As árvores conversam quando ninguém está olhando.', isTrue: false },
+{ text: 'Os pássaros jogam xadrez nas árvores.', isTrue: false },
+{ text: 'A lua é um queijo verde.', isTrue: false },
+{ text: 'As formigas constroem arranha-céus no jardim.', isTrue: false },
+{ text: 'Os dinossauros jogam esconde-esconde.', isTrue: false },
+{ text: 'O abacaxi é uma espécie de disco voador.', isTrue: false },
+{ text: 'Os gatos gostam de fazer tricô.', isTrue: false },
+{ text: 'As minhocas são campeãs de salto em altura.', isTrue: false },
+{ text: 'Os carros têm asas invisíveis.', isTrue: false },
+{ text: 'Os robôs dançam break na lua.', isTrue: false },
+{ text: 'Os tubarões são vegetarianos.', isTrue: false },
+{ text: 'Os polvos jogam futebol no fundo do mar.', isTrue: false },
+{ text: 'Os hipopótamos são astronautas.', isTrue: false },
+{ text: 'Os patos são mestres em ioga.', isTrue: false },
+{ text: 'As maçãs são telefones secretos.', isTrue: false },
+{ text: 'As borboletas fazem malabares com flores.', isTrue: false },
+{ text: 'Os cogumelos são guardiões de tesouros.', isTrue: false },
+{ text: 'Os pingüins participam de concursos de balé.', isTrue: false },
+{ text: 'Os caracóis são pilotos de corridas de carros.', isTrue: false },
+{ text: 'As abelhas praticam snowboard nas flores.', isTrue: false },
+{ text: 'Os esquilos são detetives secretos.', isTrue: false },
+{ text: 'Os peixes têm superpoderes aquáticos.', isTrue: false },
+{ text: 'As aranhas tecem roupas fashion.', isTrue: false },
+{ text: 'Os sapos fazem concertos de música clássica.', isTrue: false },
+{ text: 'Os leões são vegetarianos convictos.', isTrue: false },
+{ text: 'As árvores têm aulas de dança no vento.', isTrue: false },
+{ text: 'Os ursos polares são professores de natação.', isTrue: false },
+{ text: 'Os elefantes são campeões de skate.', isTrue: false },
+{ text: 'Os corujas são filósofos noturnos.', isTrue: false },
+{ text: 'Os cavalos participam de corridas de foguetes.', isTrue: false },
+{ text: 'As cobras são treinadoras de ioga.', isTrue: false },
+{ text: 'Os lagartos são mágicos de circo.', isTrue: false },
+{ text: 'Os carros têm personalidades próprias.', isTrue: false },
+{ text: 'Os golfinhos são designers de parques aquáticos.', isTrue: false },
+{ text: 'Os morcegos são pilotos de avião à noite.', isTrue: false },
+{ text: 'Os camelos são instrutores de dança do ventre.', isTrue: false },
+{ text: 'Os pinguins são chefs famosos.', isTrue: false },
+{ text: 'Os gatos praticam artes marciais.', isTrue: false },
+{ text: 'Os crocodilos são mestres de cerimônias em casamentos.', isTrue: false },
+{ text: 'Os girassóis têm conversas com o sol.', isTrue: false },
+{ text: 'Os ursos panda são poetas.', isTrue: false },
+{ text: 'Os caranguejos participam de festivais de música.', isTrue: false },
+{ text: 'Os rinocerontes são guias turísticos em safáris.', isTrue: false },
+{ text: 'As baleias fazem concursos de canto.', isTrue: false },
+{ text: 'Os gafanhotos são atletas olímpicos.', isTrue: false },
+{ text: 'Os gansos são mestres de cerimônias em desfiles de moda.', isTrue: false },
+{ text: 'Os coalas são chefs de cozinha.', isTrue: false },
+{ text: 'Os porcos praticam mergulho de altura.', isTrue: false },
+{ text: 'Os hipopótamos participam de competições de dança.', isTrue: false },
+{ text: 'Os tigres são artistas de circo.', isTrue: false },
+{ text: 'Os cangurus são saltadores profissionais.', isTrue: false },
+{ text: 'Os ouriços são consultores de moda.', isTrue: false },
+{ text: 'Os patos são instrutores de natação.', isTrue: false },
+{ text: 'As joaninhas são árbitras de futebol.', isTrue: false },
+{ text: 'Os corvos são detetives da natureza.', isTrue: false },
+{ text: 'Os coiotes são comediantes.', isTrue: false },
+{ text: 'As libélulas são pilotos de avião.', isTrue: false },
+{ text: 'Os lagartos são tatuadores.', isTrue: false },
+{ text: 'Os texugos são mestres de cerimônias em festas.', isTrue: false },
+{ text: 'Os leões-marinhos são treinadores de acrobacias.', isTrue: false },
+{ text: 'Os búfalos são campeões de xadrez.', isTrue: false },
+{ text: 'Os alces são jardineiros.', isTrue: false },
+{ text: 'Os mosquitos são mensageiros secretos.', isTrue: false },
+{ text: 'Os castores são construtores de arranha-céus.', isTrue: false },
+{ text: 'Os pardais são DJs em festas de passarinhos.', isTrue: false },
+{ text: 'Os guaxinins são inventores.', isTrue: false },
+{ text: 'Os peixes-palhaço são comediantes de circo.', isTrue: false },
+{ text: 'Os polvos são maestros de orquestra.', isTrue: false },
+{ text: 'Os caracóis são detetives lentos.', isTrue: false },
+{ text: 'Os tamanduás são críticos gastronômicos.', isTrue: false },
+{ text: 'Os javalis são cabeleireiros.', isTrue: false },
+{ text: 'Os vaga-lumes são lanternas mágicas.', isTrue: false },
+{ text: 'Os periquitos são cantores de ópera.', isTrue: false },
+{ text: 'Os texugos são artistas de rua.', isTrue: false },
+{ text: 'Os suricatas são apresentadores de TV.', isTrue: false },
+{ text: 'Os avestruzes são pilotos de avião.', isTrue: false },
+{ text: 'Os crocodilos são coreógrafos de dança.', isTrue: false },
+{ text: 'Os gorilas são comediantes stand-up.', isTrue: false },
+{ text: 'Os cães são mestres de cerimônias em festas de aniversário.', isTrue: false },
+{ text: 'Os hipopótamos são instrutores de natação sincronizada.', isTrue: false },
+{ text: 'Os flamingos são modelos de passarela.', isTrue: false },
+{ text: 'Os gatos são especialistas em escalar montanhas.', isTrue: false }
+        ];
+
+        let currentQuestionIndex = -1;
+
+        function playCorrectSound() {
+            const audio = document.getElementById('correctAudio');
+            audio.play();
+        }
+
+        function getNextQuestion() {
+            currentQuestionIndex = Math.floor(Math.random() * phrases.length);
+            document.getElementById('question').innerText = phrases[currentQuestionIndex].text;
+            document.getElementById('result').innerText = '';
+            document.getElementById('nextButton').style.display = 'none';
+        }
+
+        function checkAnswer(answer) {
+            const currentQuestion = phrases[currentQuestionIndex];
+
+            if (answer === currentQuestion.isTrue) {
+                document.getElementById('result').innerText = 'Acertou! Parabéns!';
+                playCorrectSound();
+                document.getElementById('nextButton').style.display = 'block';
+            } else {
+                document.getElementById('result').innerText = 'Tente novamente.';
+            }
+        }
+
+        getNextQuestion();
+    </script>
+
+</body>
+</html>
