@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios de Adivinhação Divertidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        label {
+            width: 100%;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        select {
+            width: calc(50% - 5px);
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.71 8.29a1 1 0 0 0 1.42 1.42L12 6.41l2.88 2.88a1 1 0 1 0 1.42-1.42l-3.59-3.6a1 1 0 0 0-1.42 0L7.71 8.29zM12 17.59l-2.88-2.88a1 1 0 0 0-1.42 1.42l3.59 3.6a1 1 0 0 0 1.42 0l3.59-3.6a1 1 0 0 0-1.42-1.42L12 17.59z"/></svg>');
+            background-size: 14px;
+            background-repeat: no-repeat;
+            background-position: calc(100% - 10px) center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Exercícios de Adivinhação Divertidos</h1>
+    <form id="difficultyForm">
+        <label for="studentName">Nome do Aluno:</label>
+        <input type="text" id="studentName" name="studentName" required>
+        <label for="difficulty">Nível de Dificuldade:</label>
+        <select id="difficulty" name="difficulty">
+            <option value="1">1 (Muito Fácil)</option>
+            <option value="2">2 (Fácil)</option>
+            <option value="3">3 (Médio)</option>
+            <option value="4">4 (Difícil)</option>
+            <option value="5">5 (Muito Difícil)</option>
+        </select>
+        <label for="numDays">Número de Dias:</label>
+        <select id="numDays" name="numDays">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+        <label for="pagesPerDay">Páginas por Dia:</label>
+        <select id="pagesPerDay" name="pagesPerDay">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <button type="button" onclick="generatePDF('download')">Baixar PDF</button>
+        <button type="button" onclick="generatePDF('preview')">Visualizar PDF</button>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+    function generateRandomQuestion(difficulty) {
+        let questions;
+
+        switch (difficulty) {
+            case '1': // Muito Fácil
+                questions = [
+                "O céu é azul. De que cor é o céu?",
+                "Um cachorro é um animal. O que é um cachorro?",
+                "1 + 1 = 2. Quanto é 1 + 1?",
+                "Batata é minha comida favorita. O que eu gosto de comer?",
+                "Meu esporte favorito é futebol. Qual é meu esporte favorito?",
+                "Gosto de azul. Qual é a minha cor favorita?",
+                "Moro em Belém do Pará, no Brasil. Em que cidade eu moro?",
+                "Eu tenho um cachorro. Qual animal de estimação eu tenho?",
+                "Meu nome é João. Qual é meu nome?",
+                "Minha fruta favorita é maçã. Qual é minha fruta favorita?",
+                "Tenho dois irmãos. Quantos irmãos eu tenho?",
+                "Minha escola é grande. Como é minha escola?",
+                "Minha professora se chama Maria. Qual é o nome da minha professora?",
+                "Meu livro favorito é Harry Potter. Qual é meu livro favorito?",
+                "Gosto de assistir filmes. O que eu gosto de fazer?",
+                "Prefiro verão. Qual estação do ano eu prefiro?",
+                "Meu brinquedo favorito é um carro. Qual é meu brinquedo favorito?",
+                "Tenho um gato chamado Simba. Qual é o nome do meu gato?",
+                "Meu irmão se chama Pedro. Qual é o nome do meu irmão?",
+                "Minha cor favorita é verde. Qual é minha cor favorita?",
+                "Adoro jogar videogame. O que eu adoro fazer?",
+                "Meu pai trabalha como médico. Qual é a profissão do meu pai?",
+                "Minha mãe é professora. Qual é a profissão da minha mãe?",
+                "Minha comida favorita é pizza. Qual é minha comida favorita?",
+                "Eu gosto de desenhar. O que eu gosto de fazer?",
+                "Minha melhor amiga se chama Ana. Qual é o nome da minha melhor amiga?",
+                "Eu gosto de sorvete de chocolate. Qual é o sabor de sorvete que eu gosto?",
+                "Minha avó mora na cidade. Onde minha avó mora?",
+                "Eu estudo na escola XYZ. Onde eu estudo?",
+                "Eu jogo futebol no time da escola. Em qual time eu jogo futebol?",
+                "Minha matéria favorita é matemática. Qual é minha matéria favorita?",
+                "Eu gosto de ler livros de aventura. Que tipo de livros eu gosto de ler?",
+                "Meu aniversário é em janeiro. Em que mês é meu aniversário?",
+                "Eu gosto de brincar no parquinho. Onde eu gosto de brincar?",
+                "Minha tia se chama Clara. Qual é o nome da minha tia?",
+                "Eu tenho uma bicicleta vermelha. Que cor é minha bicicleta?",
+                "Minha flor favorita é rosa. Qual é minha flor favorita?",
+                "Eu gosto de assistir desenhos animados. O que eu gosto de assistir?",
+                "Meu melhor amigo é o Lucas. Quem é meu melhor amigo?",
+                "Minha irmã mais nova se chama Laura. Qual é o nome da minha irmã mais nova?",
+                "Eu prefiro cachorros a gatos. Qual animal eu prefiro?",
+                "Minha cor favorita é azul. Qual é minha cor favorita?",
+                "Eu gosto de nadar. O que eu gosto de fazer?"
+            ];
+            break;
+        case '2': // Fácil
+            questions = [
+                "A maçã é uma fruta. O que é uma maçã?",
+                "O sol é amarelo. De que cor é o sol?",
+                "O Brasil é um país. O que é o Brasil?",
+                "Meu esporte favorito é futebol e basquete. O que eu gosto além de basquete?",
+                "Eu gosto de pizza e hambúrguer. Qual é uma das comidas que eu gosto?",
+                "Minha cor favorita é azul e verde. Qual é uma das minhas cores favoritas?",
+                "Eu moro no Brasil e na Argentina. Em quais países eu moro?",
+                "Eu tenho um cachorro e um gato. Quais animais de estimação eu tenho?",
+                "Meu nome é João e Pedro. Quais são meus nomes?",
+                "Minha fruta favorita é maçã e banana. Quais são minhas frutas favoritas?",
+                "Tenho dois irmãos e uma irmã. Quantos irmãos e irmãs eu tenho?",
+                "Minha escola é grande e bonita. Como é minha escola?",
+                "Minha professora se chama Maria e Ana. Quais são os nomes das minhas professoras?",
+                "Meu livro favorito é Harry Potter e O Senhor dos Anéis. Quais são meus livros favoritos?",
+                "Gosto de assistir filmes e séries. O que eu gosto de fazer?",
+                "Prefiro verão e inverno. Quais são as estações do ano que eu prefiro?",
+                "Meu brinquedo favorito é um carro e uma boneca. Quais são meus brinquedos favoritos?",
+                "Tenho um gato chamado Simba e um cachorro chamado Rex. Quais são os nomes dos meus animais de estimação?",
+                "Meu irmão se chama Pedro e minha irmã se chama Ana. Quais são os nomes dos meus irmãos?",
+                "Minha cor favorita é verde e amarelo. Quais são minhas cores favoritas?",
+                "Adoro jogar videogame e assistir TV. O que eu adoro fazer?",
+                "Meu pai trabalha como médico e minha mãe é professora. Quais são as profissões dos meus pais?",
+                "Minha comida favorita é pizza e lasanha. Quais são minhas comidas favoritas?",
+                "Eu gosto de desenhar e pintar. O que eu gosto de fazer?",
+                "Minha melhor amiga se chama Ana e Maria. Quais são os nomes das minhas melhores amigas?",
+                "Eu gosto de sorvete de chocolate e morango. Quais são os sabores de sorvete que eu gosto?",
+                "Minha avó mora na cidade e no campo. Onde minha avó mora?",
+                "Eu estudo na escola XYZ e ABC. Onde eu estudo?",
+                "Eu jogo futebol no time da escola e no time do bairro. Em quais times eu jogo futebol?",
+                "Minha matéria favorita é matemática e ciências. Quais são minhas matérias favoritas?",
+                "Eu gosto de ler livros de aventura e mistério. Que tipo de livros eu gosto de ler?",
+                "Meu aniversário é em janeiro e fevereiro. Em que meses são meus aniversários?",
+                "Eu gosto de brincar no parquinho e na praia. Onde eu gosto de brincar?",
+                "Minha tia se chama Clara e Maria. Quais são os nomes das minhas tias?",
+                "Eu tenho uma bicicleta vermelha e azul. Que cores são minhas bicicletas?",
+                "Minha flor favorita é rosa e margarida. Quais são minhas flores favoritas?",
+                "Eu gosto de assistir desenhos animados e filmes. O que eu gosto de assistir?",
+                "Meu melhor amigo é o Lucas e o Pedro. Quem são meus melhores amigos?",
+                "Minha irmã mais nova se chama Laura e Ana. Quais são os nomes das minhas irmãs mais novas?",
+                "Eu prefiro cachorros a gatos e pássaros. Quais animais eu prefiro?",
+                "Minha cor favorita é azul e vermelho. Quais são minhas cores favoritas?",
+                "Eu gosto de nadar e jogar futebol. O que eu gosto de fazer?"
+            ];
+            break;
+        case '3': // Médio
+            questions = [
+                "O futebol é o esporte mais popular no Brasil. Qual é o esporte mais popular no Brasil?",
+                "A capital do Brasil é Brasília. Qual é a capital do Brasil?",
+                "A Torre Eiffel está localizada em Paris. Em que cidade a Torre Eiffel está localizada?",
+                "Meu esporte favorito é futebol, basquete e vôlei. O que eu gosto além de basquete?",
+                "Eu gosto de pizza, hambúrguer e batata frita. Quais são as comidas que eu gosto?",
+                "Minha cor favorita é azul, verde e vermelho. Quais são minhas cores favoritas?",
+                "Eu moro no Brasil, Argentina e Chile. Em quais países eu moro?",
+                "Eu tenho um cachorro, um gato e um pássaro. Quais animais de estimação eu tenho?",
+                "Meu nome é João, Pedro e Lucas. Quais são meus nomes?",
+                "Minha fruta favorita é maçã, banana e laranja. Quais são minhas frutas favoritas?",
+                "Tenho dois irmãos, uma irmã e um primo. Quantos irmãos, irmãs e primos eu tenho?",
+                "Minha escola é grande, bonita e antiga. Como é minha escola?",
+                "Minha professora se chama Maria, Ana e Carla. Quais são os nomes das minhas professoras?",
+                "Meu livro favorito é Harry Potter, O Senhor dos Anéis e Percy Jackson. Quais são meus livros favoritos?",
+                "Gosto de assistir filmes, séries e desenhos animados. O que eu gosto de fazer?",
+                "Prefiro verão, inverno e primavera. Quais são as estações do ano que eu prefiro?",
+                "Meu brinquedo favorito é um carro, uma boneca e um avião. Quais são meus brinquedos favoritos?",
+                "Tenho um gato chamado Simba, um cachorro Rex e um pássaro chamado Pipoca. Qual o nome do meu gato?",
+                "Meu irmão se chama Pedro, minha irmã se chama Ana e meu primo se chama Lucas. Quais são os nomes dos meus primos?",
+                "Minha cor favorita é verde, amarelo e azul. Quais são minhas cores favoritas?",
+                "Adoro jogar videogame, assistir TV e brincar no parque. O que eu adoro fazer?",
+                "Meu pai trabalha como médico, minha mãe é professora e meu avô é engenheiro. Qual a profissão do meu avô?",
+                "Minha comida favorita é pizza, lasanha e sushi. Quais são minhas comidas favoritas?",
+                "Eu gosto de desenhar, pintar e ler. O que eu gosto de fazer?",
+                "Minha melhor amiga se chama Ana, Maria e Clara. Quais são os nomes das minhas melhores amigas?",
+                "Eu gosto de sorvete de chocolate, morango e baunilha. Quais são os sabores de sorvete que eu gosto?",
+                "Minha avó mora na cidade, no campo e na praia. Onde minha avó mora?",
+                "Eu estudo na escola XYZ, ABC e DEF. Onde eu estudo?",
+                "Eu jogo futebol no time da escola, do bairro e da cidade. Em quais times eu jogo futebol?",
+                "Minha matéria favorita é matemática, ciências e história. Quais são minhas matérias favoritas?",
+                "Eu gosto de ler livros de aventura, mistério e fantasia. Que tipo de livros eu gosto de ler?",
+                "Meu aniversário é em janeiro, fevereiro e março. Em que meses são meus aniversários?",
+                "Eu gosto de brincar no parquinho, na praia e no quintal. Onde eu gosto de brincar?",
+                "Minha tia se chama Clara, Maria e Joana. Quais são os nomes das minhas tias?",
+                "Eu tenho uma bicicleta vermelha, azul e verde. Que cores são minhas bicicletas?",
+                "Minha flor favorita é rosa, margarida e girassol. Quais são minhas flores favoritas?",
+                "Eu gosto de assistir desenhos animados, filmes e séries. O que eu gosto de assistir?",
+                "Meu melhor amigo é o Lucas, Pedro e João. Quem são meus melhores amigos?",
+                "Minha irmã mais nova se chama Laura, Ana e Bia. Quais são os nomes das minhas irmãs mais novas?",
+                "Eu prefiro cachorros a gatos, pássaros e peixes. Quais animais eu prefiro?",
+                "Minha cor favorita é azul, vermelho e preto. Quais são minhas cores favoritas?",
+                "Eu gosto de nadar, jogar futebol e andar de bicicleta. O que eu gosto de fazer?"
+            ];
+            break;
+        case '4': // Difícil
+            questions = [
+                "A água ferve a 100 graus Celsius. Qual é a temperatura de ebulição da água?",
+                "O Brasil é o maior país da América do Sul. Qual é o maior país da América do Sul?",
+                "O Monte Everest é a montanha mais alta do mundo. Qual é a montanha mais alta?",
+                "A capital da França é Paris. Qual é a capital da França?",
+                "O corpo humano tem 206 ossos. Quantos ossos tem o corpo humano?",
+                "O Sol é uma estrela. O que é o Sol?",
+                "A gravidade faz os objetos caírem. O que faz os objetos caírem?",
+                "As plantas fazem fotossíntese. O que as plantas fazem?",
+                "A Terra gira em torno do Sol. O que a Terra faz em torno do Sol?",
+                "O oceano Pacífico é o maior. Qual é o maior oceano?",
+                "A camada de ozônio protege dos raios UV. O que a camada de ozônio faz?",
+                "Os morcegos usam ecolocalização. O que os morcegos usam?",
+                "O sangue é bombeado pelo coração. O que bombeia o sangue?",
+                "O gelo flutua na água. Por que o gelo flutua?",
+                "A luz viaja mais rápido que o som. O que viaja mais rápido?",
+                "A lua influencia as marés. O que influencia as marés?",
+                "As abelhas produzem mel. O que as abelhas produzem?",
+                "Os vulcões entram em erupção. O que os vulcões fazem?",
+                "A camada externa da Terra é a crosta. Qual é a camada externa da Terra?",
+                "O pH neutro é 7. Qual é o pH neutro?",
+                "A mitocôndria é a 'usina' da célula. O que é a mitocôndria?",
+                "O esmalte é a parte mais dura do dente. Qual é a parte mais dura do dente?",
+                "A baleia azul é o maior animal. Qual é o maior animal?",
+                "O barômetro mede a pressão atmosférica. O que o barômetro mede?",
+                "A atmosfera é composta principalmente de nitrogênio. Qual é o principal componente da atmosfera?",
+                "A célula vegetal tem cloroplastos. O que a célula vegetal tem que a animal não tem?",
+                "O DNA contém informações genéticas. O que o DNA contém?",
+                "A hemoglobina transporta oxigênio. O que a hemoglobina transporta?",
+                "A fotossíntese ocorre nos cloroplastos. Onde ocorre a fotossíntese?",
+                "O oxigênio é essencial para a respiração celular. O que é essencial para a respiração celular?",
+                "A eletricidade é conduzida por metais. O que conduz a eletricidade?",
+                "O ponto de fusão do gelo é 0 graus Celsius. Qual é o ponto de fusão do gelo?",
+                "O raio é uma descarga elétrica. O que é o raio?",
+                "O ciclo da água inclui evaporação e precipitação. Quais processos estão no ciclo da água?",
+                "A lua tem fases como nova e cheia. Quais são algumas das fases da lua?",
+                "O ser humano possui cinco sentidos. Quantos sentidos possui o ser humano?",
+                "A camada mais externa da pele é a epiderme. Qual é a camada mais externa da pele?",
+                "O ser humano é um mamífero. O que o ser humano é?",
+                "Os peixes respiram por brânquias. Como os peixes respiram?",
+                "A Estátua da Liberdade está em Nova York. Onde está a Estátua da Liberdade?",
+                "O Taj Mahal está na Índia. Onde está o Taj Mahal?",
+                "O Nilo é o rio mais longo. Qual é o rio mais longo?",
+                "A Antártida é o continente mais frio. Qual é o continente mais frio?"
+            ];
+            break;
+        case '5': // Avançado
+            questions = [
+                "A luz é composta por fótons. O que compõe a luz?",
+                "Einstein propôs a teoria da relatividade. Quem propôs a teoria da relatividade?",
+                "Os elementos estão na tabela periódica. Onde estão os elementos?",
+                "Fleming descobriu a penicilina. Quem descobriu a penicilina?",
+                "O acelerador de partículas está no CERN. Onde está o acelerador de partículas?",
+                "Heisenberg formulou o princípio da incerteza. Quem formulou o princípio da incerteza?",
+                "A velocidade da luz é 300.000 km/s. Qual é a velocidade da luz?",
+                "Darwin propôs a evolução das espécies. Quem propôs a evolução das espécies?",
+                "A água é H2O. O que compõe a água?",
+                "A gravitação universal é de Newton. O que a gravitação universal descreve?",
+                "O Big Bang explica a origem do universo. O que o Big Bang explica?",
+                "A eletrostática estuda cargas em repouso. O que a eletrostática estuda?",
+                "A tabela periódica organiza por número atômico. Como organiza a tabela periódica?",
+                "O DNA é composto por nucleotídeos. O que compõe o DNA?",
+                "A química orgânica estuda o carbono. O que a química orgânica estuda?",
+                "A velocidade é a razão entre distância e tempo. O que é a velocidade?",
+                "A segunda lei de Newton é F=ma. Qual é a segunda lei de Newton?",
+                "O som é uma onda mecânica. O que é o som?",
+                "A fotossíntese converte CO2 em glicose. O que a fotossíntese converte?",
+                "A energia potencial é armazenada. O que é a energia potencial?",
+                "A água ferve a 100 graus Celsius. Qual é o ponto de ebulição da água?",
+                "A membrana celular é semipermeável. O que é a membrana celular?",
+                "A mitose é divisão celular. O que é a mitose?",
+                "A entropia mede a desordem. O que a entropia mede?",
+                "A combustão envolve oxigênio. O que a combustão envolve?",
+                "O pH ácido é menor que 7. O que caracteriza o pH ácido?",
+                "O som não se propaga no vácuo. Onde o som não se propaga?",
+                "A densidade é massa por volume. O que é a densidade?",
+                "A corrente é medida em amperes. Em que unidade é medida a corrente elétrica?",
+                "A camada de ozônio está na estratosfera. Onde está a camada de ozônio?",
+                "O sal de cozinha é NaCl. Qual é a fórmula do sal de cozinha?",
+                "A cromatografia separa misturas. O que a cromatografia faz?",
+                "O princípio de Arquimedes explica a flutuação. O que explica a flutuação?",
+                "A radiação UV causa câncer de pele. O que a radiação UV pode causar?",
+                "A clorofila é verde. Qual é a cor da clorofila?",
+                "A resistência é medida em ohms. Em que unidade é medida a resistência elétrica?",
+                "A célula eucariótica tem núcleo. O que caracteriza a célula eucariótica?",
+                "O RNA tem ribose e uracila. Como o RNA é diferente do DNA?",
+                "A astronomia estuda corpos celestes. O que a astronomia estuda?",
+                "O ácido clorídrico está no estômago. Onde está o ácido clorídrico?",
+                "A teoria quântica descreve partículas. O que a teoria quântica descreve?",
+                "A célula procariótica não tem núcleo. O que caracteriza a célula procariótica?"
+            ];
+            break;
+            default:
+                questions = [];
+                break;
+        }
+
+        return questions[Math.floor(Math.random() * questions.length)];
+    }
+
+    function generatePDF(action) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const difficulty = document.getElementById('difficulty').value;
+        const studentName = document.getElementById('studentName').value;
+        const numDays = parseInt(document.getElementById('numDays').value);
+        const pagesPerDay = parseInt(document.getElementById('pagesPerDay').value);
+        const totalPages = numDays * pagesPerDay;
+        
+        // Definindo a altura de uma linha de texto
+        const lineHeight = 10;
+
+        for (let page = 0; page < totalPages; page++) {
+            if (page > 0) {
+                doc.addPage();
+            }
+
+            const questions = [];
+            for (let i = 0; i < 12; i++) {
+                questions.push(generateRandomQuestion(difficulty));
+            }
+
+            const maxLinesPerPage = Math.floor(doc.internal.pageSize.height / lineHeight);
+            let lines = 0;
+            questions.forEach((question, index) => {
+    const x = 10;
+    let y = 35 + (lineHeight * lines);
+    
+    const questionLines = doc.splitTextToSize(question + " ______________", doc.internal.pageSize.width - 20);
+    const remainingLines = maxLinesPerPage - lines;
+
+    if (questionLines.length <= remainingLines) {
+        questionLines.forEach((line, i) => {
+            doc.text(line, x, y + (lineHeight * i));
+        });
+        lines += questionLines.length;
+    } else {
+        const firstPageLines = questionLines.slice(0, remainingLines);
+        firstPageLines.forEach((line, i) => {
+            doc.text(line, x, y + (lineHeight * i));
+        });
+        doc.addPage();
+        const remainingPageLines = questionLines.slice(remainingLines);
+        remainingPageLines.forEach((line, i) => {
+            doc.text(line, x, 10 + (lineHeight * i));
+        });
+        lines = remainingPageLines.length;
+    }
+});
+
+            const currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + Math.floor(page / pagesPerDay));
+            const formattedDate = currentDate.toLocaleDateString('pt-BR');
+            const difficultyText = [
+                'Muito Fácil', 'Fácil', 'Médio', 'Difícil', 'Muito Difícil'
+            ][difficulty - 1];
+            const title = `Exercícios de Adivinhação Divertidos - ${formattedDate} - Nível: ${difficultyText}`;
+            const studentText = studentName ? `Aluno: ${studentName}` : '';
+            const completeText = `${title}\n\n${studentText}`;
+
+            doc.text(completeText, 105, 10, { align: 'center' });
+        }
+
+        if (action === 'download') {
+            doc.save('exercicios_adivinhacao.pdf');
+        } else if (action === 'preview') {
+const pdfDataUri = doc.output('datauristring');
+const iframe = "<iframe width='100%' height='100%' src='" + pdfDataUri + "'></iframe>";
+const x = window.open();
+x.document.open();
+x.document.write(iframe);
+x.document.close();
+}
+}
+</script>
+
+</body>
+</html>
